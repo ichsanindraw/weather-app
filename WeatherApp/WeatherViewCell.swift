@@ -15,7 +15,7 @@ final class WeatherViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.backgroundColor = .systemRed
+//        contentView.backgroundColor = .systemRed
     }
     
     required init?(coder: NSCoder) {
@@ -49,6 +49,26 @@ final class WeatherViewCell: UICollectionViewCell {
                 cardView.centerXAnchor.constraint(equalTo: centerXAnchor),
                 cardView.centerYAnchor.constraint(equalTo: centerYAnchor)
             ])
+            
+            switch size {
+            case .small:
+                NSLayoutConstraint.activate([
+                    cardView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5),
+                    cardView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5)
+                ])
+            case .medium:
+                NSLayoutConstraint.activate([
+                    cardView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0),
+                    cardView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5)
+                ])
+            case .large:
+                NSLayoutConstraint.activate([
+                    cardView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0),
+                    cardView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0)
+                ])
+            }
         }
+        
+        print(">>> card size: \(size) || \(self.frame)")
     }
 }

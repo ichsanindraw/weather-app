@@ -13,16 +13,16 @@ final class WeatherCardView: UIView {
         case medium
         case large
         
-        internal var preferredSize: CGSize {
-            switch self {
-            case .small:
-                return CGSize.square(size: 155)
-            case .medium:
-                return CGSize(width: 329, height: 155)
-            case .large:
-                return CGSize(width: 329, height: 345)
-            }
-        }
+//        internal var preferredSize: CGSize {
+//            switch self {
+//            case .small:
+//                return CGSize.square(size: 155)
+//            case .medium:
+//                return CGSize(width: 329, height: 155)
+//            case .large:
+//                return CGSize(width: 329, height: 345)
+//            }
+//        }
         
         internal var imageSize: CGSize {
             switch self {
@@ -107,6 +107,9 @@ final class WeatherCardView: UIView {
         backgroundImageView.layer.cornerRadius = cornerRadius
         labelView.font = UIFont.systemFont(ofSize: size.fontSize)
         
+        let angleInRadians = 5 * CGFloat.pi / 180
+//        transform = CGAffineTransform(rotationAngle: angleInRadians)
+        
 //        start3DRotationAnimation()
 //        startCubicKeyframeAnimation()
 //        performWidgetSelectionAnimation()
@@ -120,9 +123,6 @@ final class WeatherCardView: UIView {
         addSubview(labelView)
         
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: size.preferredSize.width),
-            heightAnchor.constraint(equalToConstant: size.preferredSize.height),
-
             backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
             backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -138,6 +138,38 @@ final class WeatherCardView: UIView {
             labelView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             labelView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
         ])
+
+        
+//        switch size {
+//        case .small:
+//            NSLayoutConstraint.activate([
+//                widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0),
+//                heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0)
+////                heightAnchor.constraint(equalToConstant: size.preferredSize.height)
+//            ])
+//        case .medium:
+//            NSLayoutConstraint.activate([
+////                widthAnchor.constraint(equalToConstant: size.preferredSize.width),
+////                heightAnchor.constraint(equalToConstant: size.preferredSize.height)
+//                widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0),
+//                heightAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5)
+//            ])
+//        case .large:
+//            NSLayoutConstraint.activate([
+////                widthAnchor.constraint(equalToConstant: size.preferredSize.width),
+////                heightAnchor.constraint(equalToConstant: size.preferredSize.height)
+//                widthAnchor.constraint(equalTo: widthAnchor, multiplier: 2.0),
+//                heightAnchor.constraint(equalTo: widthAnchor, multiplier: 2.0)
+//            ])
+//        }
+        
+        print(">>> card frame: \(frame)")
+//        
+//        if let widthConstraint = constraints.first(where: {
+//            $0.firstAttribute == .width
+//        }) {
+//            print("Width Constraint Multiplier: \(widthConstraint.multiplier)")
+//        }
     }
     
     private func start3DRotationAnimation() {

@@ -74,9 +74,9 @@ final class MainViewController: UIViewController {
             isSetup = checkPermission(status: CLLocationManager.authorizationStatus())
         }
             
-        if isSetup {
+//        if isSetup {
 //            setupLoadingLayout()
-        }
+//        }
         
         if let location = locationManager.location {
             let lat = location.coordinate.latitude
@@ -86,11 +86,6 @@ final class MainViewController: UIViewController {
         } else {
             locationManager.requestWhenInUseAuthorization()
         }
-    }
-    
-    private func setup() {
-        setupSuccessLayout()
-        setupAction()
     }
 
     private func setupNavigationAppearance() {
@@ -167,6 +162,8 @@ final class MainViewController: UIViewController {
             
         case let .success(data):
             setupSuccessLayout()
+            setupAction()
+            
             widgetView.didUpdateData(data)
             
         case let .error(message):
