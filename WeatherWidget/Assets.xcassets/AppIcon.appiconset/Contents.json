@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "weather_app_icon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
