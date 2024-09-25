@@ -19,7 +19,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+     
+        /// Storyboard
+        let storyboard = UIStoryboard(name: "RootViewController", bundle: nil)
+        if let rootViewController = storyboard.instantiateInitialViewController() {
+            window?.rootViewController = UINavigationController(rootViewController: rootViewController)
+        }
+        
+        /// Programatically UI Layouting
+        //window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+        
         window?.makeKeyAndVisible()
     }
 

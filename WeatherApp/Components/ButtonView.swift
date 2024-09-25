@@ -17,10 +17,24 @@ final class ButtonView: UIButton {
         return CGSize(width: super.intrinsicContentSize.width, height: 50)
     }
     
-    init(title: String, type: ButtonView.`Type`) {
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    convenience init(title: String, type: ButtonView.`Type`) {
+        self.init(frame: .zero)
         
+        configure(title: title, type: type)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    func configure(title: String, type: ButtonView.`Type`) {
         setTitle(title, for: .normal)
+        setTitleColor(.white, for: .normal)
+        setTitleColor(.white, for: .highlighted)
         
         layer.cornerRadius = 24
         
@@ -30,10 +44,6 @@ final class ButtonView: UIButton {
         case .danger:
             backgroundColor = UIColor.accentRed
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

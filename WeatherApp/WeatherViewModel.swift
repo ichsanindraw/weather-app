@@ -11,6 +11,7 @@ import WidgetKit
 
 class WeatherViewModel {
     private let networkManager: NetworkManager
+    private let userDefaults: UserDefaults?
     private var cancellables = Set<AnyCancellable>()
     private var timer: Timer?
     
@@ -19,9 +20,13 @@ class WeatherViewModel {
     
     init(
         backgroundImage: UIImage? = nil,
-        networkManager: NetworkManager = NetworkManager()
+        networkManager: NetworkManager = NetworkManager(),
+        userDefaults: UserDefaults? = UserDefaults(suiteName: Constant.appGroup)
     ) {
+       
         self.networkManager = networkManager
+        self.userDefaults = userDefaults
+        
         if let backgroundImage {
             self.backgroundImage = backgroundImage
         } else {
@@ -34,9 +39,7 @@ class WeatherViewModel {
     }
     
     private func loadBgImageFromUserDefaults() -> UIImage? {
-        let userDefaults = UserDefaults(suiteName: Constant.appGroup)
-        
-        guard let imageData = userDefaults?.data(forKey: Constant.backgroundImageKey) else {
+        guard let userDefaults, let imageData = userDefaults.data(forKey: Constant.backgroundImageKey) else {
             return nil
         }
         
@@ -62,16 +65,12 @@ class WeatherViewModel {
     }
     
     func storeWeatherData(_ data: WeatherData) {
-        let userDefaults = UserDefaults(suiteName: Constant.appGroup)
-        
         if let encodedData = try? JSONEncoder().encode(data) {
             userDefaults?.set(encodedData, forKey: Constant.weatherDataKey)
         }
     }
     
-    private func storeBackgroundImage(_ image: UIImage?) {
-        let userDefaults = UserDefaults(suiteName: Constant.appGroup)
-        
+    func storeBackgroundImage(_ image: UIImage?) {        
         if let data = image?.pngData() {
             userDefaults?.set(data, forKey: Constant.backgroundImageKey)
         } else {
@@ -80,17 +79,15 @@ class WeatherViewModel {
     }
     
     func getWeather(lat: Double, long: Double) {
-//        if case .loading = state {
-            state = .loading
-//        }
+        state = .loading
         
         // Fetch weather data immediately
         fetchWeather(lat: lat, long: long)
         
         // Schedule timer to fetch weather data every 1 minute
-//        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] _ in
-//            self?.fetchWeather(lat: lat, long: long)
-//        })
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] _ in
+            self?.fetchWeather(lat: lat, long: long)
+        })
     }
     
     func updateBackgroundImage(_ image: UIImage?) {

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Root View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="RootViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7G-me-Hqd" customClass="ShimmerView" customModule="WeatherApp" customModuleProvider="target">
+                                <rect key="frame" x="121.66666666666669" y="351" width="150" height="150"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="5Na-2v-HOv"/>
+                                    <constraint firstAttribute="height" constant="150" id="D0O-d2-bdd"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pgs-o8-T1P" customClass="WeatherView" customModule="WeatherApp" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="59" width="393" height="657.66666666666663"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weD-S5-5cq" customClass="ButtonView" customModule="WeatherApp" customModuleProvider="target">
+                                <rect key="frame" x="16" y="732.66666666666663" width="361" height="34.333333333333371"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <action selector="handleChangeBackground:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="PM4-ug-uMe"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XsE-OZ-w4Q" userLabel="Reset Bg Button View" customClass="ButtonView" customModule="WeatherApp" customModuleProvider="target">
+                                <rect key="frame" x="16" y="783" width="361" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <action selector="handleResetBackground:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Imx-gz-bXc"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="weD-S5-5cq" firstAttribute="top" secondItem="pgs-o8-T1P" secondAttribute="bottom" constant="16" id="3r1-RS-HoH"/>
+                            <constraint firstItem="pgs-o8-T1P" firstAttribute="trailing" secondItem="5EZ-qb-Rvc" secondAttribute="trailing" id="Clz-EB-UOK"/>
+                            <constraint firstItem="R7G-me-Hqd" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="EVE-mb-Bue"/>
+                            <constraint firstItem="XsE-OZ-w4Q" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="Eat-Zb-OuF"/>
+                            <constraint firstItem="pgs-o8-T1P" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="FFa-OP-hOH"/>
+                            <constraint firstItem="XsE-OZ-w4Q" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" constant="16" id="Fdg-E3-ZPp"/>
+                            <constraint firstItem="weD-S5-5cq" firstAttribute="trailing" secondItem="5EZ-qb-Rvc" secondAttribute="trailing" constant="-16" id="K9S-s7-FNG"/>
+                            <constraint firstItem="pgs-o8-T1P" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="Og3-kE-Wiz"/>
+                            <constraint firstItem="weD-S5-5cq" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" constant="16" id="RXz-OJ-vn7"/>
+                            <constraint firstItem="R7G-me-Hqd" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="aOd-5F-JDT"/>
+                            <constraint firstItem="weD-S5-5cq" firstAttribute="bottom" secondItem="XsE-OZ-w4Q" secondAttribute="top" constant="-16" id="bEs-mS-fDi"/>
+                            <constraint firstItem="XsE-OZ-w4Q" firstAttribute="trailing" secondItem="5EZ-qb-Rvc" secondAttribute="trailing" constant="-16" id="u9m-OL-Q0y"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="changeBgButtonView" destination="weD-S5-5cq" id="rd0-iV-NLh"/>
+                        <outlet property="resetBgButtonView" destination="XsE-OZ-w4Q" id="v9N-At-T7t"/>
+                        <outlet property="shimmerView" destination="R7G-me-Hqd" id="VJ6-Qw-rWj"/>
+                        <outlet property="weatherView" destination="pgs-o8-T1P" id="jay-fA-NKq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="38" y="-2"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

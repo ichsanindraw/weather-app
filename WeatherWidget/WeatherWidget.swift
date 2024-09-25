@@ -27,8 +27,6 @@ struct Provider: AppIntentTimelineProvider {
             let entry = SimpleEntry(date: entryDate, configuration: configuration)
             entries.append(entry)
         }
-        
-//        print(">>> entries: \(entries)")
 
         return Timeline(entries: entries, policy: .atEnd)
     }

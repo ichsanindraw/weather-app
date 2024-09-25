@@ -9,10 +9,6 @@ import Foundation
 import UIKit
 
 struct WeatherData: Codable, Equatable {
-    static func == (lhs: WeatherData, rhs: WeatherData) -> Bool {
-        return true
-    }
-    
     let weather: [Weather]
     let name: String
     
@@ -22,7 +18,7 @@ struct WeatherData: Codable, Equatable {
     }
 }
 
-struct Weather: Codable {
+struct Weather: Codable, Equatable {
     let id: Int
     let main: String
     let description: String
@@ -59,7 +55,7 @@ enum WeatherType: String {
 
 // Helper
 
-enum ViewState<T> {
+enum ViewState<T: Equatable>: Equatable {
     case loading
     case success(T)
     case error(String)

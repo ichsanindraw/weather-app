@@ -12,74 +12,118 @@ import XCTest
 
 final class WeatherViewModelTests: XCTestCase {
     var viewModel: WeatherViewModel!
-    var networkManager: MockNetworkManager!
+    var mockNetworkManager: MockNetworkManager!
+    var mockUserDefaults: MockUserDefaults!
     var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
         
-        networkManager = MockNetworkManager()
-        viewModel = WeatherViewModel(networkManager: networkManager)
+        mockNetworkManager = MockNetworkManager()
+        mockUserDefaults = MockUserDefaults(suiteName: Constant.appGroup)
+        
+        viewModel = WeatherViewModel(
+            networkManager: mockNetworkManager,
+            userDefaults: mockUserDefaults
+        )
+        
         cancellables = []
     }
 
     override func tearDown() {
         viewModel = nil
-        networkManager = nil
+        mockNetworkManager = nil
         cancellables = nil
         
         super.tearDown()
     }
     
-    func testGetWeather_ShouldCallFetchWeather() {
-        let expectedWeatherData = WeatherData.mock
-        networkManager.weatherDataToReturn = expectedWeatherData
-
-        viewModel.getWeather(lat: 37.7749, long: -122.4194)
-
-        XCTAssertTrue(networkManager.fetchWeatherCalled, "fetchWeather should have been called")
-        
-        let expectation = XCTestExpectation(description: "Weather data should be updated")
-        viewModel.$weatherData
-            .sink { weatherData in
-                XCTAssertEqual(weatherData, expectedWeatherData)
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        wait(for: [expectation], timeout: 1.0)
-    }
-
-    func testUpdateBackgroundImage_ShouldStoreImage() {
-        let testImage = UIImage(systemName: "test_image")
-
-        viewModel.updateBackgroundImage(testImage)
-
-        XCTAssertNotNil(viewModel.backgroundImage, "Background image should be updated")
-        
-        // Verify the image was stored in UserDefaults
-        let userDefaults = UserDefaults(suiteName: Constant.appGroup)
-        XCTAssertNotNil(userDefaults?.data(forKey: Constant.backgroundImageKey), "Image should be saved in UserDefaults")
+    func testInitialStateIsLoading() {
+        // Check initial state
+        XCTAssertEqual(viewModel.state, .loading, "Initial state should be loading")
     }
     
-    func testLoadBgImageFromUserDefaults_ShouldLoadImage() {
-        let testImage = UIImage(systemName: "sun.max")
-        let userDefaults = UserDefaults(suiteName: Constant.appGroup)
-        userDefaults?.set(testImage?.pngData(), forKey: Constant.backgroundImageKey)
-
-        let loadedImage = viewModel.backgroundImage
-
-        XCTAssertNotNil(loadedImage, "Background image should be loaded from UserDefaults")
+    func testFetchWeatherSuccess() {
+        let mockWeatherData = WeatherData(weather: [], name: "Success City")
+        mockNetworkManager.weatherData = mockWeatherData
+        
+        viewModel.getWeather(lat: 0.0, long: 0.0)
+        
+        // Expect the state to change to success with the correct data
+        let expectation = XCTestExpectation(description: "Weather data fetch should succeed")
+        
+        viewModel.$state
+            .dropFirst()
+            .sink { state in
+                if case .success(let data) = state {
+                    XCTAssertEqual(data.name, "Success City", "Weather data should match the mock data")
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
+        wait(for: [expectation], timeout: 1.0)
     }
+    
+    func testFetchWeatherFailure() {
+        mockNetworkManager.isError = true
 
-    func testStoreWeatherData_ShouldSaveToUserDefaults() {
-        let weatherData = WeatherData.mock
-
-        viewModel.storeWeatherData(weatherData)
-
-        let userDefaults = UserDefaults(suiteName: Constant.appGroup)
-        let storedData = userDefaults?.data(forKey: Constant.weatherDataKey)
-        XCTAssertNotNil(storedData, "Weather data should be saved to UserDefaults")
+        viewModel.getWeather(lat: 0.0, long: 0.0)
+       
+        let expectation = XCTestExpectation(description: "Weather data fetch should fail")
+       
+        viewModel.$state
+            .dropFirst()
+            .sink { state in
+                if case .error(let message) = state {
+                    XCTAssertEqual(message, URLError(.badServerResponse).localizedDescription, "Error message should match")
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+       
+        wait(for: [expectation], timeout: 1.0)
     }
-
+    
+    func testUpdateBackgroundImage() {
+        let mockImage = UIImage(systemName: "sun")
+        
+        viewModel.updateBackgroundImage(mockImage)
+        
+        XCTAssertEqual(viewModel.backgroundImage, mockImage?.resized(), "Background image should be resized and set")
+    }
+    
+    func testStoreWeatherData() {
+        let mockWeatherData = WeatherData(weather: [], name: "Stored City")
+            
+        viewModel.storeWeatherData(mockWeatherData)
+            
+        if let encodedData = mockUserDefaults.storedData[Constant.weatherDataKey] as? Data {
+           let decodedWeatherData = try? JSONDecoder().decode(WeatherData.self, from: encodedData)
+           XCTAssertEqual(decodedWeatherData, mockWeatherData)
+       } else {
+           XCTFail("Weather data was not saved correctly.")
+       }
+    }
+    
+    func testStoreBackgroundImage() {
+        let mockImage = UIImage(systemName: "sun")
+            
+        viewModel.storeBackgroundImage(mockImage)
+            
+        if let storedImageData = mockUserDefaults.storedData[Constant.backgroundImageKey] as? Data,
+           let imageData = mockImage?.pngData() {
+            XCTAssertEqual(storedImageData, imageData)
+        } else {
+            XCTFail("Background image was not saved correctly.")
+        }
+    }
+    
+    func testRemoveStoredBackgroundImage() {
+        mockUserDefaults.storedData[Constant.backgroundImageKey] = Data()
+        
+        viewModel.storeBackgroundImage(nil)
+        
+        XCTAssertNil(mockUserDefaults.storedData[Constant.backgroundImageKey], "Background image was not removed correctly.")
+    }
 }

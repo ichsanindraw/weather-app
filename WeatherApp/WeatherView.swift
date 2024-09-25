@@ -39,16 +39,28 @@ final class WeatherView: UIView {
     private var weatherData: WeatherData?
     private var cancellable = Set<AnyCancellable>()
     
-    init() {
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        setupCollection()
-        setupPageControl()
-        setupUI()
+        setup()
+    }
+    
+    convenience init() {
+        self.init(frame: .zero)
+        
+        setup()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        
+        setup()
+    }
+    
+    private func setup() {
+        setupCollection()
+        setupPageControl()
+        setupUI()
     }
     
     private func setupCollection() {
@@ -83,8 +95,7 @@ final class WeatherView: UIView {
     }
     
     @objc func handlePageControlTapped(_ sender: UIPageControl) {
-        let offsetX = CGFloat(sender.currentPage) * collectionView.frame.size.width
-        collectionView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: true)
+        collectionView.scrollToItem(at: IndexPath(item:  sender.currentPage, section: 0), at: .centeredHorizontally, animated: true)
     }
     
     func didUpdateBackground(_ image: UIImage?) {
@@ -126,7 +137,7 @@ extension WeatherView: UICollectionViewDataSource {
 }
 
 extension WeatherView: UICollectionViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {        
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let visibleCells = collectionView.visibleCells
         
         for cell in visibleCells {

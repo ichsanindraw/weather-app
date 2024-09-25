@@ -14,8 +14,6 @@ final class WeatherViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-//        contentView.backgroundColor = .systemRed
     }
     
     required init?(coder: NSCoder) {
@@ -68,7 +66,5 @@ final class WeatherViewCell: UICollectionViewCell {
                 ])
             }
         }
-        
-        print(">>> card size: \(size) || \(self.frame)")
     }
 }

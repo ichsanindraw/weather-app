@@ -5,25 +5,25 @@
 //  Created by Ichsan Indra Wahyudi on 05/09/24.
 //
 
+import XCTest
 import Combine
 
 @testable import WeatherApp
 
 class MockNetworkManager: NetworkManager {
-    var fetchWeatherCalled = false
-    var weatherDataToReturn: WeatherData?
-    var errorToReturn: Error?
+    var isError = false
+    var weatherData: WeatherData?
 
     override func fetchWeather(_ lat: Double, _ long: Double) -> AnyPublisher<WeatherData, Error> {
-        fetchWeatherCalled = true
-        if let error = errorToReturn {
-            return Fail(error: error).eraseToAnyPublisher()
-        } else if let weatherData = weatherDataToReturn {
-            return Just(weatherData)
-                .setFailureType(to: Error.self)
+        guard !isError else {
+            return Fail(error: URLError(.badServerResponse))
                 .eraseToAnyPublisher()
         }
-        return Empty().eraseToAnyPublisher()
+        
+        let weatherData = self.weatherData ?? WeatherData(weather: [], name: "Test City")
+        return Just(weatherData)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
     }
 }
 
